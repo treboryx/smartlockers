@@ -12,6 +12,7 @@ export async function GET() {
 
 	const geojson = {
 		type: 'FeatureCollection',
+		color: '#92c054',
 		features: markers.map((marker) => {
 			return {
 				type: 'Feature',

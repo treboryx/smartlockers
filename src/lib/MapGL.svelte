@@ -54,7 +54,8 @@
 			});
 
 			map.on('style.load', () => {
-				initiator();
+				initiator({ provider: 'boxnow' });
+				initiator({ provider: 'acs' });
 			});
 		};
 
@@ -64,9 +65,11 @@
 		// };
 	});
 
-	const initiator = async () => {
-		const markers = await fetch('/markers/boxnow').then((res) => res.json());
-		map.addSource('markers', {
+	const initiator = async ({ provider }) => {
+		if (!provider) return;
+		const markers = await fetch(`/markers/${provider}`).then((res) => res.json());
+
+		map.addSource(`markers-${provider}`, {
 			type: 'geojson',
 			data: markers,
 			cluster: true,
@@ -74,9 +77,9 @@
 			clusterRadius: 50 // Radius of each cluster when clustering points (defaults to 50)
 		});
 		map.addLayer({
-			id: 'clusters',
+			id: `clusters-${provider}`,
 			type: 'circle',
-			source: 'markers',
+			source: `markers-${provider}`,
 			filter: ['has', 'point_count'],
 			paint: {
 				'circle-color': ['step', ['get', 'point_count'], '#51bbd6', 100, '#f1f075', 750, '#f28cb1'],
@@ -85,9 +88,9 @@
 		});
 
 		map.addLayer({
-			id: 'cluster-count',
+			id: `clusters-count-${provider}`,
 			type: 'symbol',
-			source: 'markers',
+			source: `markers-${provider}`,
 			filter: ['has', 'point_count'],
 			layout: {
 				'text-field': '{point_count_abbreviated}',
@@ -97,24 +100,24 @@
 		});
 
 		map.addLayer({
-			id: 'unclustered-point',
+			id: `unclustered-point-${provider}`,
 			type: 'circle',
-			source: 'markers',
+			source: `markers-${provider}`,
 			filter: ['!', ['has', 'point_count']],
 			paint: {
-				'circle-color': '#92c054',
+				'circle-color': markers.color,
 				'circle-radius': 12,
 				'circle-stroke-width': 1,
 				'circle-stroke-color': '#fff'
 			}
 		});
 
-		map.on('click', 'clusters', (e) => {
+		map.on('click', `clusters-${provider}`, (e) => {
 			const features = map.queryRenderedFeatures(e.point, {
-				layers: ['clusters']
+				layers: [`clusters-${provider}`]
 			});
 			const clusterId = features[0].properties.cluster_id;
-			map.getSource('markers').getClusterExpansionZoom(clusterId, (err, zoom) => {
+			map.getSource(`markers-${provider}`).getClusterExpansionZoom(clusterId, (err, zoom) => {
 				if (err) return;
 
 				map.easeTo({
@@ -124,7 +127,7 @@
 			});
 		});
 
-		map.on('click', 'unclustered-point', (e) => {
+		map.on('click', `unclustered-point-${provider}`, (e) => {
 			const coordinates = e.features[0].geometry.coordinates.slice();
 			const props = e.features[0].properties;
 
@@ -134,14 +137,16 @@
 
 			new mapbox.Popup()
 				.setLngLat(coordinates)
-				.setHTML(`${props.title}\n${props.address}`)
+				.setHTML(
+					`<span style="color: ${markers.color}; font-weight: 900;">${props.company}</span><br/>${props.title}<br/>${props.address}`
+				)
 				.addTo(map);
 		});
 
-		map.on('mouseenter', 'clusters', () => {
+		map.on('mouseenter', `clusters-${provider}`, () => {
 			map.getCanvas().style.cursor = 'pointer';
 		});
-		map.on('mouseleave', 'clusters', () => {
+		map.on('mouseleave', `clusters-${provider}`, () => {
 			map.getCanvas().style.cursor = '';
 		});
 	};
