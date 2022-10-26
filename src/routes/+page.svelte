@@ -1,7 +1,6 @@
 <script>
 	import MapGL from '$lib/MapGL.svelte';
 	import MapStylePicker from '$lib/MapStylePicker.svelte';
-	let deck;
 	let map;
 	let currentStyle = 'mapbox://styles/treboryx/cl8t68z9s001b16phmp3p97g2';
 
@@ -22,7 +21,7 @@
 	}}
 />
 <div class="map">
-	<MapGL {viewState} bind:deck bind:map />
+	<MapGL {viewState} bind:map />
 </div>
 
 <style>
