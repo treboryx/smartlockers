@@ -2,7 +2,12 @@
 module.exports = {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 	theme: {
-		extend: {}
+		extend: {
+			colors: {
+				boxnow: '#92c054',
+				acs: '#ff0000'
+			}
+		}
 	},
 	plugins: []
 };

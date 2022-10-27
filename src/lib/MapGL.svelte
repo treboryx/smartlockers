@@ -32,7 +32,8 @@
 			map = new mapbox.Map(optionsWithDefaults);
 
 			map.on('load', async () => {
-				initiator();
+				// initiator({ provider: 'boxnow' });
+				// initiator({ provider: 'acs' });
 				// for (const marker of markers) {
 				// 	// Create a DOM element for each marker.
 				// 	const el = document.createElement('div');
@@ -43,11 +44,9 @@
 				// 	el.style.width = `${width}px`;
 				// 	el.style.height = `${height}px`;
 				// 	el.style.backgroundSize = '100%';
-
 				// 	el.addEventListener('click', () => {
 				// 		window.alert(marker.properties.message);
 				// 	});
-
 				// 	// Add markers to the map.
 				// 	new mapbox.Marker(el).setLngLat([marker.lng, marker.lat]).addTo(map);
 				// }
@@ -65,10 +64,12 @@
 		// };
 	});
 
+	let count = { boxnow: { count: 0, ts: null }, acs: { count: 0, ts: null } };
+
 	const initiator = async ({ provider }) => {
 		if (!provider) return;
 		const markers = await fetch(`/markers/${provider}`).then((res) => res.json());
-
+		count[provider].count = markers.features.length;
 		map.addSource(`markers-${provider}`, {
 			type: 'geojson',
 			data: markers,
@@ -153,6 +154,14 @@
 </script>
 
 <div class="main-container">
+	<div class="absolute left-0 z-50 top-[40%]">
+		<div class="bg-white rounded-sm border border-gray-200 m-4 p-4 text-center">
+			<h2 class="font-bold text-boxnow">BOXNOW</h2>
+			<span>{count.boxnow.count}</span>
+			<h2 class="font-bold text-acs">ACS</h2>
+			<span>{count.acs.count}</span>
+		</div>
+	</div>
 	<div class="map-container" bind:this={container} />
 </div>
 
