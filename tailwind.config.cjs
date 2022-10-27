@@ -5,7 +5,8 @@ module.exports = {
 		extend: {
 			colors: {
 				boxnow: '#92c054',
-				acs: '#ff0000'
+				acs: '#ff0000',
+				skroutz: '#fd671e'
 			}
 		}
 	},

@@ -54,6 +54,7 @@
 
 			map.on('style.load', () => {
 				initiator({ provider: 'boxnow' });
+				initiator({ provider: 'skroutz' });
 				initiator({ provider: 'acs' });
 			});
 		};
@@ -64,7 +65,13 @@
 		// };
 	});
 
-	let count = { boxnow: { count: 0, ts: null }, acs: { count: 0, ts: null } };
+	let count = {
+		boxnow: { count: 0, ts: null },
+		acs: { count: 0, ts: null },
+		skroutz: { count: 0, ts: null }
+	};
+
+	$: total = count.boxnow.count + count.acs.count + count.skroutz.count;
 
 	const initiator = async ({ provider }) => {
 		if (!provider) return;
@@ -160,6 +167,10 @@
 			<span>{count.boxnow.count}</span>
 			<h2 class="font-bold text-acs">ACS</h2>
 			<span>{count.acs.count}</span>
+			<h2 class="font-bold text-skroutz">Skroutz</h2>
+			<span>{count.skroutz.count}</span>
+			<h2 class="font-bold mt-4">TOTAL LOCKERS</h2>
+			<span>{total.toLocaleString()}</span>
 		</div>
 	</div>
 	<div class="map-container" bind:this={container} />
