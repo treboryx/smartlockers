@@ -1,18 +1,13 @@
-# create-svelte
+# Smart Lockers in Greece
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+![Preview of the Smart Lockers Map](https://smartlockers.roberto.gr/image.jpeg)
 
-## Creating a project
+# Tech Stack
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+- SvelteKit
+- TailwindCSS
+- Mapbox
+- Cloudflare
 
 ## Developing
 
@@ -21,8 +16,7 @@ Once you've created a project and installed dependencies with `npm install` (or 
 ```bash
 npm run dev
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+npm run dev
 ```
 
 ## Building

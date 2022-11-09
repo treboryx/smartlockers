@@ -32,6 +32,7 @@
 			map = new mapbox.Map(optionsWithDefaults);
 
 			map.on('load', async () => {
+				// TODO: create custom markers
 				// initiator({ provider: 'boxnow' });
 				// initiator({ provider: 'acs' });
 				// for (const marker of markers) {
@@ -58,7 +59,7 @@
 				initiator({ provider: 'acs' });
 			});
 		};
-
+		// todo: fix this
 		// return () => {
 		// 	map.remove();
 		// 	link.parentNode.removeChild(link);
